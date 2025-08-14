@@ -1,45 +1,39 @@
 #include <stdio.h>
 #include <string.h>
 
-// =========== Imprime e faza compração dos atributos =========//
-void impresao_comparativa(
-    char nome1[50], char estado1[4], float valor1,
-    char nome2[50], char estado2[4], float valor2,
-    const char *criterio, int numero)
+// =========== Faz a compração dos atributos =========//
+int comparacao(float valor1, float valor2, int numero)
 {
-    printf("\n--- Comparação: %s ---\n", criterio);
-    printf("Carta 1 - %s (%s): %.2f\n", nome1, estado1, valor1);
-    printf("Carta 2 - %s (%s): %.2f\n", nome2, estado2, valor2);
 
-    printf("\nResultado: ");
     if (numero != 0)
     {
         if (valor1 > valor2)
         {
-            printf("Carta 1 (%s) venceu no critério %s!\n", nome1, criterio);
+            return 1;
         }
         else if (valor2 > valor1)
         {
-            printf("Carta 2 (%s) venceu no critério %s!\n", nome2, criterio);
+            return 2;
         }
         else
         {
-            printf("Empate no critério %s!\n", criterio);
+            return 3;
         }
     }
+
     else if (numero == 0)
     {
         if (valor1 < valor2)
         {
-            printf("Carta 1 (%s) venceu no critério %s!\n", nome1, criterio);
+            return 1;
         }
         else if (valor2 < valor1)
         {
-            printf("Carta 2 (%s) venceu no critério %s!\n", nome2, criterio);
+            return 2;
         }
         else
         {
-            printf("Empate no critério %s!\n", criterio);
+            return 3;
         }
     }
 }
@@ -52,11 +46,7 @@ float Calculo_densidade(unsigned long int populacao, float area, int bolean)
         printf("Erro: população ou área inválida para cálculo de densidade.\n");
         return 0.0f;
     }
-    if (bolean != 0)
-    {
-        return (float)populacao / area;
-    }
-    return area / (float)populacao;
+    return bolean == 0 ? area / (float)populacao : (float)populacao / area;
 }
 // =========== Faz o Calculo do PIB per Capita =========//
 float Calculo_PIB_Per_Capita(unsigned long int populacao, float pib)
@@ -87,14 +77,16 @@ void limparBuffer(void)
 int main()
 {
     // ====== Declarção da Variaveis ==========//
+    const char *criterio1, *criterio2;
     char letracidade1, letracidade2;
     char nomecidade1[50], nomecidade2[50];
     char codigodacarta1[4], codigodacarta2[4], estado1[4], estado2[4];
-    int nptcd1, nptcd2;
+    int nptcd1, nptcd2, resultado1, resultado2;
     unsigned long int populacaoCidade1, populacaoCidade2;
     float areacd1, areacd2, pibcd1, pibcd2;
     float densidadepopulacionalcd1, densidadepopulacionalcd2, densidadeinversacd1, densidadeinversacd2;
     float pibpercaptadc1, pibpercaptadc2, superpodercarta1, superpodercarta2;
+    float soma1, soma2, valor1a, valor1b, valor2a, valor2b;
 
     // ===== CARTA 1 =====
     printf("Entrada das Informações da carta 1:\n");
@@ -181,7 +173,7 @@ int main()
 
     // exibe o Menu
 
-    int opcao;
+    int opcao1;
     printf("\nEscolha o atributo para comparação:\n");
     printf("1 - População\n");
     printf("2 - Área\n");
@@ -191,37 +183,168 @@ int main()
     printf("6 - PIB per Capita\n");
     printf("7 - Super Poder\n");
     printf("Opção: ");
-    scanf("%d", &opcao);
+    scanf("%d", &opcao1);
 
-    if (opcao > 7 || opcao < 1)
+    if (opcao1 > 7 || opcao1 < 1)
     {
         printf("Opção inválida!\n");
         return 0;
     }
-    switch (opcao)
+    switch (opcao1)
     {
     case 1:
-        impresao_comparativa(nomecidade1, estado1, populacaoCidade1, nomecidade2, estado2, populacaoCidade2, "População", 1);
+        resultado1 = comparacao(populacaoCidade1, populacaoCidade2, 1);
+        criterio1 = "População";
+        valor1a = populacaoCidade1;
+        valor2a = populacaoCidade2;
         break;
     case 2:
-        impresao_comparativa(nomecidade1, estado1, areacd1, nomecidade2, estado2, areacd2, "Área", 1);
+        resultado1 = comparacao(areacd1, areacd2, 1);
+        criterio1 = "Área";
+        valor1a = areacd1;
+        valor2a = areacd2;
         break;
     case 3:
-        impresao_comparativa(nomecidade1, estado1, pibcd1, nomecidade2, estado2, pibcd2, "PIB", 1);
+        resultado1 = comparacao(pibcd1, pibcd2, 1);
+        criterio1 = "PIB";
+        valor1a = pibcd1;
+        valor2a = pibcd2;
         break;
     case 4:
-        impresao_comparativa(nomecidade1, estado1, nptcd1, nomecidade2, estado2, nptcd2, "Pontos Turísticos", 1);
+        resultado1 = comparacao(nptcd1, nptcd2, 1);
+        criterio1 = "Pontos Turísticos";
+        valor1a = nptcd1;
+        valor2a = nptcd2;
         break;
     case 5:
-        impresao_comparativa(nomecidade1, estado1, densidadepopulacionalcd1, nomecidade2, estado2, densidadepopulacionalcd2, "Densidade Demográfica", 0);
+        resultado1 = comparacao(densidadepopulacionalcd1, densidadepopulacionalcd2, 0);
+        criterio1 = "Densidade Demográfica";
+        valor1a = densidadepopulacionalcd1;
+        valor2a = densidadepopulacionalcd2;
         break;
     case 6:
-        impresao_comparativa(nomecidade1, estado1, pibpercaptadc1, nomecidade2, estado2, pibpercaptadc2, "PIB per Capita", 1);
+        resultado1 = comparacao(pibpercaptadc1, pibpercaptadc2, 1);
+        criterio1 = "PIB per Capita";
+        valor1a = pibpercaptadc1;
+        valor2a = pibpercaptadc2;
+
         break;
     case 7:
-        impresao_comparativa(nomecidade1, estado1, superpodercarta1, nomecidade2, estado2, superpodercarta2, "Super Poder", 1);
+        resultado1 = comparacao(superpodercarta1, superpodercarta2, 1);
+        criterio1 = "Super Poder";
+        valor1a = superpodercarta1;
+        valor2a = superpodercarta2;
         break;
     }
+    int opcao2;
+    printf("\nEscolha o atributo para comparação:\n");
+    printf("1 - População\n");
+    printf("2 - Área\n");
+    printf("3 - PIB\n");
+    printf("4 - Pontos Turísticos\n");
+    printf("5 - Densidade Demográfica\n");
+    printf("6 - PIB per Capita\n");
+    printf("7 - Super Poder\n");
+    printf("Opção: ");
+    scanf("%d", &opcao2);
+
+    if (opcao1 == opcao2)
+    {
+        printf("Criterio ja escolhido !\n");
+        return 0;
+    }
+
+    if (opcao2 > 7 || opcao2 < 1)
+    {
+        printf("Opção inválida!\n");
+        return 0;
+    }
+    switch (opcao2)
+    {
+    case 1:
+        resultado2 = comparacao(populacaoCidade1, populacaoCidade2, 1);
+        criterio2 = "População";
+        valor1b = populacaoCidade1;
+        valor2b = populacaoCidade2;
+        break;
+    case 2:
+        resultado2 = comparacao(areacd1, areacd2, 1);
+        criterio2 = "Área";
+        valor1b = areacd1;
+        valor2b = areacd2;
+        break;
+    case 3:
+        resultado2 = comparacao(pibcd1, pibcd2, 1);
+        criterio2 = "PIB";
+        valor1b = pibcd1;
+        valor2b = pibcd2;
+        break;
+    case 4:
+        resultado2 = comparacao(nptcd1, nptcd2, 1);
+        criterio2 = "Pontos Turísticos";
+        valor1b = nptcd1;
+        valor2b = nptcd2;
+        break;
+    case 5:
+        resultado2 = comparacao(densidadepopulacionalcd1, densidadepopulacionalcd2, 0);
+        criterio2 = "Densidade Demográfica";
+        valor1b = densidadepopulacionalcd1;
+        valor2b = densidadepopulacionalcd2;
+        break;
+    case 6:
+        resultado2 = comparacao(pibpercaptadc1, pibpercaptadc2, 1);
+        criterio2 = "PIB per Capita";
+        valor1b = pibpercaptadc1;
+        valor2b = pibpercaptadc2;
+        break;
+    case 7:
+        resultado2 = comparacao(superpodercarta1, superpodercarta2, 1);
+        criterio2 = "Super Poder";
+        valor1b = superpodercarta1;
+        valor2b = superpodercarta2;
+        break;
+    }
+
+    soma1 = valor1a + valor1b;
+    soma2 = valor2a + valor2b;
+
+    // Resultado do primeiro critério
+    printf("\n--- Resultado do critério 1 (%s) ---\n", criterio1);
+    if (resultado1 == 1)
+    {
+        printf("%s (%s) venceu! Valor: %.2f\n", nomecidade1, estado1, valor1a);
+    }
+    else if (resultado1 == 2)
+    {
+        printf("%s (%s) venceu! Valor: %.2f\n", nomecidade2, estado2, valor2a);
+    }
+    else
+    {
+        printf("Empate!\n");
+    }
+
+    // Resultado do segundo critério
+    printf("\n--- Resultado do critério 2 (%s) ---\n", criterio2);
+    if (resultado2 == 1)
+    {
+        printf("%s (%s) venceu! Valor: %.2f\n", nomecidade1, estado1, valor1b);
+    }
+    else if (resultado2 == 2)
+    {
+        printf("%s (%s) venceu! Valor: %.2f\n", nomecidade2, estado2, valor2b);
+    }
+    else
+    {
+        printf("Empate!\n");
+    }
+
+    printf("\n=== Resultado Final ===\n");
+    if (soma1 > soma2)
+        printf("%s (%s) é a vencedora! Soma: %.2f x %.2f\n", nomecidade1, estado1, soma1, soma2);
+    else if (soma2 > soma1)
+        printf("%s (%s) é a vencedora! Soma: %.2f x %.2f\n", nomecidade2, estado2, soma2, soma1);
+    else
+        printf("Empate geral! Soma: %.2f\n", soma1 );
 
     return 0;
 }
