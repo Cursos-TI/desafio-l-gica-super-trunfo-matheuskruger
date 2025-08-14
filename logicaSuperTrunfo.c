@@ -86,7 +86,7 @@ int main()
     float areacd1, areacd2, pibcd1, pibcd2;
     float densidadepopulacionalcd1, densidadepopulacionalcd2, densidadeinversacd1, densidadeinversacd2;
     float pibpercaptadc1, pibpercaptadc2, superpodercarta1, superpodercarta2;
-    float soma1, soma2, valor1a, valor1b, valor2a, valor2b;
+    float valor1a, valor1b, valor2a, valor2b;
 
     // ===== CARTA 1 =====
     printf("Entrada das Informações da carta 1:\n");
@@ -305,9 +305,6 @@ int main()
         break;
     }
 
-    soma1 = valor1a + valor1b;
-    soma2 = valor2a + valor2b;
-
     // Resultado do primeiro critério
     printf("\n--- Resultado do critério 1 (%s) ---\n", criterio1);
     if (resultado1 == 1)
@@ -339,12 +336,12 @@ int main()
     }
 
     printf("\n=== Resultado Final ===\n");
-    if (soma1 > soma2)
-        printf("%s (%s) é a vencedora! Soma: %.2f x %.2f\n", nomecidade1, estado1, soma1, soma2);
-    else if (soma2 > soma1)
-        printf("%s (%s) é a vencedora! Soma: %.2f x %.2f\n", nomecidade2, estado2, soma2, soma1);
+    if (resultado1 == 1 && resultado2 == 1)
+        printf("%s (%s) é a vencedora da rodada! Venceu em ambos os critérios.\n", nomecidade1, estado1);
+    else if (resultado1 == 2 && resultado2 == 2)
+        printf("%s (%s) é a vencedora da rodada! Venceu em ambos os critérios.\n", nomecidade2, estado2);
     else
-        printf("Empate geral! Soma: %.2f\n", soma1 );
+        printf("Empate na rodada! Nenhuma carta venceu em ambos os critérios.\n");
 
     return 0;
 }
